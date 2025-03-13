@@ -21,15 +21,19 @@ public class Menu {
         int choice;
         System.out.println("Welcome to my Car Rental System!");
         while (true) {
+            System.out.println();
             System.out.println("Main menu:");
             System.out.println("1. Add a new car");
             System.out.println("2. Show all cars");
-            System.out.println("3. Add a new client");
-            System.out.println("4. Show all clients");
-            System.out.println("5. Make a reservation");
-            System.out.println("6. Show reservation history");
-            System.out.println("7. Exit");
-            System.out.print("Please enter your choice: ");
+            System.out.println("3. Search cars by brand/model");
+            System.out.println("4. Add a new client");
+            System.out.println("5. Show all clients");
+            System.out.println("6. Rent a car to a client");
+            System.out.println("7. Return a rented car");
+            System.out.println("8. Show reservation history");
+            System.out.println("9. View all active rentals");
+            System.out.println("10. Exit");
+            System.out.print("Enter your choice: ");
 
             try {
                 choice = scanner.nextInt();
@@ -42,32 +46,38 @@ public class Menu {
         }
     }
 
-    private void processChoice(int choice) {
+    public void processChoice(int choice) {
         switch (choice) {
             case 1:
-                System.out.println("You selected to add a new car.");
                 carService.addNewCar();
                 break;
             case 2:
-                System.out.println("Showing all cars...");
                 carService.showCars();
                 break;
             case 3:
-                clientService.addNewClient();
+                carService.searchByModelOrBrand();
                 break;
             case 4:
-                System.out.println("Showing all clients...");
+                clientService.addNewClient();
+                break;
+            case 5:
                 clientService.showClients();
                 break;
-//            case 5:
-//                makeReservation();
-//                break;
-//            case 6:
-//                showReservationHistory();
-//                break;
-//            case 7:
-//                System.out.println("Exiting...");
-//                break;
+            case 6:
+                carService.rentCar();
+                break;
+            case 7:
+                carService.returnRentedCar();
+                break;
+            case 8:
+                carService.showHistory();
+                break;
+            case 9:
+                carService.viewActiveRentals();
+                break;
+            case 10:
+                System.out.println("Exiting...");
+                return;
             default:
                 System.out.println("Invalid choice! Try again.");
                 break;

@@ -10,6 +10,9 @@ public class CarServices {
 
     public CarServices() {
         this.cars = new ArrayList<>();
+        // Sample data
+        cars.add(new Electric("Toyota", "Corolla", 2020, 40.0, 300));
+        cars.add(new Suv("Jeep", "Wrangler", 2021, 100.0, true));
     }
 
     public void addNewCar() {
@@ -70,5 +73,25 @@ public class CarServices {
                 System.out.println(car);
             }
         }
+    }
+
+    public void searchByModelOrBrand() {
+
+    }
+
+    public void rentCar() {
+
+    }
+
+    public void returnRentedCar() {
+
+    }
+
+    public void showHistory() {
+
+    }
+
+    public void viewActiveRentals() {
+
     }
 }

@@ -10,6 +10,9 @@ public class ClientServices {
 
     public ClientServices() {
         this.clients = new ArrayList<>();
+        // Sample data
+        clients.add(new Client("John Doe", "1234567890", "123 Elm St"));
+        clients.add(new Client("Jane Smith", "0987654321", "456 Oak St"));
     }
 
     public void addNewClient() {
@@ -29,14 +32,14 @@ public class ClientServices {
         System.out.println("Client added successfully!");
     }
 
-    public Client getClientById(int id) {
-        for (Client client : clients) {
-            if (client.getId() == id) {
-                return client;
-            }
-        }
-        return null;
-    }
+//    public Client getClientById(int id) {
+//        for (Client client : clients) {
+//            if (client.getId() == id) {
+//                return client;
+//            }
+//        }
+//        return null;
+//    }
 
     public void showClients() {
         if (clients.isEmpty()) {
