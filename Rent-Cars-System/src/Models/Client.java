@@ -8,7 +8,7 @@ public class Client {
     private String name;
     private String phoneNumber;
     private String address;
-    private List<Car> rentHistory;
+    private List<Rental> rentals;
     private static int id_cnt = 0;
 
     public Client(String name, String phoneNumber, String address) {
@@ -16,7 +16,7 @@ public class Client {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.rentHistory = new ArrayList<>();
+        this.rentals = new ArrayList<>();
     }
 
     public int getId() {
@@ -35,22 +35,21 @@ public class Client {
         return address;
     }
 
-    public List<Car> getRentHistory() {
-        return rentHistory;
+    public List<Rental> getRentals() {
+        return rentals;
     }
 
-    public void rentCar(Car car) {
-        rentHistory.add(car);
-        car.setAvailable(false);
+    public void addRental(Rental rental) {
+        rentals.add(rental);
     }
 
     public void showRentHistory() {
-        if (rentHistory.isEmpty()) {
+        if (rentals.isEmpty()) {
             System.out.println(name + " has no reservations.");
         } else {
-            System.out.println("Reservation history for " + name + ":");
-            for (Car car : rentHistory) {
-                System.out.println(car);
+            System.out.println("Rental history for " + name + ":");
+            for (Rental rental : rentals) {
+                System.out.println(rental);
             }
         }
     }

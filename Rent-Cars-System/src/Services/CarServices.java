@@ -75,11 +75,16 @@ public class CarServices {
         }
     }
 
-    public void searchByModelOrBrand() {
-
+    public Car getCarById(int id) {
+        for (Car car : cars) {
+            if (car.getId() == id) {
+                return car;
+            }
+        }
+        return null;
     }
 
-    public void rentCar() {
+    public void searchByModelOrBrand() {
 
     }
 

@@ -31,8 +31,9 @@ public class Menu {
             System.out.println("6. Rent a car to a client");
             System.out.println("7. Return a rented car");
             System.out.println("8. Show reservation history");
-            System.out.println("9. View all active rentals");
-            System.out.println("10. Exit");
+            System.out.println("9. View active rentals for a specific client");
+            System.out.println("10. View all active rentals");
+            System.out.println("11. Exit");
             System.out.print("Enter your choice: ");
 
             try {
@@ -64,18 +65,24 @@ public class Menu {
                 clientService.showClients();
                 break;
             case 6:
-                carService.rentCar();
+                rentCar();
                 break;
             case 7:
+                // -----------
                 carService.returnRentedCar();
                 break;
             case 8:
+                // -------------
                 carService.showHistory();
                 break;
             case 9:
-                carService.viewActiveRentals();
+                // -------------
+                viewActiveRentals();
                 break;
             case 10:
+                viewAllActiveRentals();
+                break;
+            case 11:
                 System.out.println("Exiting...");
                 return;
             default:
@@ -84,5 +91,62 @@ public class Menu {
         }
     }
 
+    public void rentCar() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter a client id: ");
+        int client_id = scanner.nextInt();
+
+        System.out.println("Enter a car id: ");
+        int car_id = scanner.nextInt();
+        scanner.nextLine();
+
+        Client client = clientService.getClientById(client_id);
+        if (client == null) {
+            System.out.println("Invalid Client ID!");
+            return;
+        }
+        Car car = carService.getCarById(car_id);
+        if (car == null) {
+            System.out.println("Invalid Car ID!");
+            return;
+        }
+
+        System.out.println("Enter the start date: ");
+        String startDate = scanner.nextLine();
+
+        System.out.println("How many days do you want to rent for?: ");
+        int days = scanner.nextInt();
+        scanner.nextLine();
+
+        Rental newRental = new Rental(client, car, startDate, days);
+        client.addRental(newRental);
+        System.out.printf("Client with id: %d rented car with id: %d.\n", client_id, car_id);
+    }
+
+    public void viewActiveRentals() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter a client id: ");
+        int client_id = scanner.nextInt();
+        scanner.nextLine();
+
+        Client client = clientService.getClientById(client_id);
+        if (client == null) {
+            System.out.println("Invalid Client ID!");
+            return;
+        }
+
+        if(client.getRentals().isEmpty()){
+            System.out.println("This client has no rentals.");
+            return;
+        }
+
+        for (Rental rental : client.getRentals()) {
+            System.out.println(rental);
+        }
+    }
+
+    public void viewAllActiveRentals() {
+
+    }
 }
 

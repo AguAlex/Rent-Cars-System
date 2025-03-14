@@ -32,14 +32,14 @@ public class ClientServices {
         System.out.println("Client added successfully!");
     }
 
-//    public Client getClientById(int id) {
-//        for (Client client : clients) {
-//            if (client.getId() == id) {
-//                return client;
-//            }
-//        }
-//        return null;
-//    }
+    public Client getClientById(int id) {
+        for (Client client : clients) {
+            if (client.getId() == id) {
+                return client;
+            }
+        }
+        return null;
+    }
 
     public void showClients() {
         if (clients.isEmpty()) {
@@ -50,4 +50,5 @@ public class ClientServices {
             }
         }
     }
+
 }
