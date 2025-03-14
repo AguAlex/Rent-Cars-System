@@ -21,6 +21,10 @@ public class Rental {
         car.setAvailable(false);
     }
 
+    public int getCarId() {
+        return car.getId();
+    }
+
     public void endRental() {
         this.active = false;
         car.setAvailable(true);
