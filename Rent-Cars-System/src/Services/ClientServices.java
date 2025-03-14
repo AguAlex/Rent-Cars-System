@@ -41,6 +41,10 @@ public class ClientServices {
         return null;
     }
 
+    public List<Client> getClients() {
+        return clients;
+    }
+
     public void showClients() {
         if (clients.isEmpty()) {
             System.out.println("No clients available.");

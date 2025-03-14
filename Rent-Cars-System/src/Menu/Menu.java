@@ -22,19 +22,19 @@ public class Menu {
         System.out.println("Welcome to my Car Rental System!");
         while (true) {
             System.out.println();
-            System.out.println("Main menu:");
-            System.out.println("1. Add a new car");
-            System.out.println("2. Show all cars");
-            System.out.println("3. Search cars by brand/model");
-            System.out.println("4. Add a new client");
-            System.out.println("5. Show all clients");
-            System.out.println("6. Rent a car to a client");
-            System.out.println("7. Return a rented car");
-            System.out.println("8. Show reservation history");
-            System.out.println("9. View active rentals for a specific client");
-            System.out.println("10. View all active rentals");
-            System.out.println("11. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("✨Main menu✨");
+            System.out.println("1. Add a new car \uD83D\uDE97");
+            System.out.println("2. Show all cars \uD83C\uDFDB");
+            System.out.println("3. Search cars by brand/model \uD83D\uDD0E");
+            System.out.println("4. Add a new client \uD83D\uDE47");
+            System.out.println("5. Show all clients \uD83D\uDC68\u200D\uD83D\uDC68\u200D\uD83D\uDC66");
+            System.out.println("6. Rent a car to a client \uD83E\uDD1D");
+            System.out.println("7. Return a rented car \uD83D\uDC4B");
+            System.out.println("8. Show reservation history \uD83D\uDCDC");
+            System.out.println("9. View active rentals for a specific client \uD83D\uDE4B\uD83C\uDFFD\u200D♀\uFE0F");
+            System.out.println("10. View all active rentals \uD83D\uDEE0\uFE0F");
+            System.out.println("11. Exit \uD83D\uDEAB");
+            System.out.print("\uD83D\uDC40 Enter your choice: ");
 
             try {
                 choice = scanner.nextInt();
@@ -146,7 +146,19 @@ public class Menu {
     }
 
     public void viewAllActiveRentals() {
+        for (Client client : clientService.getClients()) {
+            System.out.printf("Rentals for client with ID: %d\n", client.getId());
 
+            if(client.getRentals().isEmpty()){
+                System.out.println("This client has no rentals.");
+            }
+
+            for (Rental rental : client.getRentals()) {
+                System.out.println(rental);
+            }
+
+            System.out.println();
+        }
     }
 }
 
