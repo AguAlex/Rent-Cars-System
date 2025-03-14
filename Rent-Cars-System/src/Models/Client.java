@@ -43,6 +43,17 @@ public class Client {
         rentals.add(rental);
     }
 
+    public void removeRental(int car_id) {
+        for (Rental rental : rentals) {
+            if (rental.getCarId() == car_id){
+                rentals.remove(rental);
+                System.out.println("Rental removed\n");
+                return;
+            }
+        }
+        System.out.println("There is not a valid rental\n");
+    }
+
     public void showRentHistory() {
         if (rentals.isEmpty()) {
             System.out.println(name + " has no reservations.");

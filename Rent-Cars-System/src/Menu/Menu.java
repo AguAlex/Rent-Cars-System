@@ -56,6 +56,7 @@ public class Menu {
                 carService.showCars();
                 break;
             case 3:
+                // ------------
                 carService.searchByModelOrBrand();
                 break;
             case 4:
@@ -69,14 +70,13 @@ public class Menu {
                 break;
             case 7:
                 // -----------
-                carService.returnRentedCar();
+                returnRentedCar();
                 break;
             case 8:
                 // -------------
                 carService.showHistory();
                 break;
             case 9:
-                // -------------
                 viewActiveRentals();
                 break;
             case 10:
@@ -93,10 +93,10 @@ public class Menu {
 
     public void rentCar() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter a client id: ");
+        System.out.print("Enter a client id: ");
         int client_id = scanner.nextInt();
 
-        System.out.println("Enter a car id: ");
+        System.out.print("Enter a car id: ");
         int car_id = scanner.nextInt();
         scanner.nextLine();
 
@@ -111,10 +111,10 @@ public class Menu {
             return;
         }
 
-        System.out.println("Enter the start date: ");
+        System.out.print("Enter the start date: ");
         String startDate = scanner.nextLine();
 
-        System.out.println("How many days do you want to rent for?: ");
+        System.out.print("How many days do you want to rent for?: ");
         int days = scanner.nextInt();
         scanner.nextLine();
 
@@ -159,6 +159,29 @@ public class Menu {
 
             System.out.println();
         }
+    }
+
+    public void returnRentedCar() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a client id: ");
+        int client_id = scanner.nextInt();
+
+        System.out.print("Enter a car id: ");
+        int car_id = scanner.nextInt();
+        scanner.nextLine();
+
+        Client client = clientService.getClientById(client_id);
+        if (client == null) {
+            System.out.println("Invalid Client ID!");
+            return;
+        }
+        Car car = carService.getCarById(car_id);
+        if (car == null) {
+            System.out.println("Invalid Car ID!");
+            return;
+        }
+
+        client.removeRental(car_id);
     }
 }
 
