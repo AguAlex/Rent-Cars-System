@@ -47,7 +47,7 @@ public class Client {
         for (Rental rental : rentals) {
             if (rental.getCarId() == car_id){
                 rentals.remove(rental);
-                System.out.println("Rental removed\n");
+                System.out.println("Rental removed!\n");
                 return;
             }
         }

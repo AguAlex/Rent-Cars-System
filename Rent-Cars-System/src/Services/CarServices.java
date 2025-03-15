@@ -66,6 +66,7 @@ public class CarServices {
     }
 
     public void showCars() {
+        System.out.println("All available cars:\n");
         if (cars.isEmpty()) {
             System.out.println("No cars available.");
         } else {
@@ -85,18 +86,59 @@ public class CarServices {
     }
 
     public void searchByModelOrBrand() {
+        System.out.print("Select (1-Model, 2-Brand): ");
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
-    }
+        boolean exist = false;
+        switch (choice) {
+            case 1:
+                System.out.print("Enter a model: ");
+                String model = scanner.nextLine();
 
-    public void returnRentedCar() {
+                System.out.printf("%s cars:\n", model);
+                for (Car car : cars) {
+                    if (car.getModel().equals(model)) {
+                        System.out.println(car);
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    System.out.printf("No cars with model '%s' available!", model);
+                }
+                break;
+            case 2:
+                System.out.print("Enter a brand: ");
+                String brand = scanner.nextLine();
 
+                System.out.printf("%s cars:\n", brand);
+                for (Car car : cars) {
+                    if (car.getBrand().equals(brand)) {
+                        System.out.println(car);
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    System.out.printf("No cars with brand '%s' available!", brand);
+                }
+                break;
+            default:
+                System.out.println("Invalid choice! Try again.");
+                break;
+        }
     }
 
     public void showHistory() {
 
     }
 
-    public void viewActiveRentals() {
-
+    public void showAvailableCars() {
+        System.out.println("Available cars: ");
+        for (Car car : cars) {
+            if (car.getAvailable()) {
+                System.out.println(car);
+            }
+        }
     }
 }
