@@ -33,6 +33,9 @@ public class Car implements  Rentable{
     public double getPricePerDay() {
         return pricePerDay;
     }
+    public boolean getAvailable() {
+        return available;
+    }
 
     public void setAvailable(boolean available) {
         this.available = available;

@@ -2,8 +2,6 @@ package Menu;
 
 import Models.*;
 import Services.*;
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -33,7 +31,8 @@ public class Menu {
             System.out.println("8. Show reservation history \uD83D\uDCDC");
             System.out.println("9. View active rentals for a specific client \uD83D\uDE4B\uD83C\uDFFD\u200D♀\uFE0F");
             System.out.println("10. View all active rentals \uD83D\uDEE0\uFE0F");
-            System.out.println("11. Exit \uD83D\uDEAB");
+            System.out.println("11. Show available cars \uD83D\uDE97");
+            System.out.println("12. Exit \uD83D\uDEAB");
             System.out.print("\uD83D\uDC40 Enter your choice: ");
 
             try {
@@ -56,7 +55,6 @@ public class Menu {
                 carService.showCars();
                 break;
             case 3:
-                // ------------
                 carService.searchByModelOrBrand();
                 break;
             case 4:
@@ -69,11 +67,10 @@ public class Menu {
                 rentCar();
                 break;
             case 7:
-                // -----------
                 returnRentedCar();
                 break;
             case 8:
-                // -------------
+                // De implementat in etapa 2
                 carService.showHistory();
                 break;
             case 9:
@@ -83,7 +80,11 @@ public class Menu {
                 viewAllActiveRentals();
                 break;
             case 11:
+                carService.showAvailableCars();
+                break;
+            case 12:
                 System.out.println("Exiting...");
+                System.exit(0);
                 return;
             default:
                 System.out.println("Invalid choice! Try again.");
@@ -110,6 +111,10 @@ public class Menu {
             System.out.println("Invalid Car ID!");
             return;
         }
+        if (!car.getAvailable()) {
+            System.out.println("This car is already rented!");
+            return;
+        }
 
         System.out.print("Enter the start date: ");
         String startDate = scanner.nextLine();
@@ -120,6 +125,8 @@ public class Menu {
 
         Rental newRental = new Rental(client, car, startDate, days);
         client.addRental(newRental);
+        car.setAvailable(false);
+
         System.out.printf("Client with id: %d rented car with id: %d.\n", client_id, car_id);
     }
 
@@ -182,6 +189,7 @@ public class Menu {
         }
 
         client.removeRental(car_id);
+        car.setAvailable(true);
     }
 }
 
