@@ -32,7 +32,8 @@ public class Menu {
             System.out.println("9. View active rentals for a specific client \uD83D\uDE4B\uD83C\uDFFD\u200D♀\uFE0F");
             System.out.println("10. View all active rentals \uD83D\uDEE0\uFE0F");
             System.out.println("11. Show available cars \uD83D\uDE97");
-            System.out.println("12. Exit \uD83D\uDEAB");
+            System.out.println("12. Show all clients in alphabetical order.");
+            System.out.println("13. Exit \uD83D\uDEAB");
             System.out.print("\uD83D\uDC40 Enter your choice: ");
 
             try {
@@ -83,6 +84,9 @@ public class Menu {
                 carService.showAvailableCars();
                 break;
             case 12:
+                clientService.showClientsSorted();
+                break;
+            case 13:
                 System.out.println("Exiting...");
                 System.exit(0);
                 return;

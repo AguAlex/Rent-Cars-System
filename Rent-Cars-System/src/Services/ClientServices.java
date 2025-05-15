@@ -2,17 +2,21 @@ package Services;
 
 import Models.Client;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import DB.DBConnection;
+import java.sql.*;
 
 public class ClientServices {
     private List<Client> clients;
 
     public ClientServices() {
         this.clients = new ArrayList<>();
-        // Sample data
-        clients.add(new Client("John Doe", "1234567890", "123 Elm St"));
-        clients.add(new Client("Jane Smith", "0987654321", "456 Oak St"));
+
+        clients.add(new Client("Cristi 1 test", "1234567890", "123 Elm St"));
+        clients.add(new Client("Andrei 2 test", "0987654321", "456 Oak St"));
     }
 
     public void addNewClient() {
@@ -29,7 +33,20 @@ public class ClientServices {
         Client newClient = new Client(name, phoneNumber, address);
         clients.add(newClient);
 
-        System.out.println("Client added successfully!");
+        String query = "INSERT INTO clients (name, phone_number, address) VALUES (?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+
+            stmt.setString(1, name);
+            stmt.setString(2, phoneNumber);
+            stmt.setString(3, address);
+            stmt.executeUpdate();
+
+            System.out.println("Client added successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Client getClientById(int id) {
@@ -55,4 +72,12 @@ public class ClientServices {
         }
     }
 
+    public void showClientsSorted() {
+        List<Client> auxList = new ArrayList<>(clients);
+        auxList.sort(Comparator.comparing(Client::getName));
+
+        for (Client client : auxList) {
+            System.out.println(client.getName() + " (ID: " + client.getId() + ")");
+        }
+    }
 }
