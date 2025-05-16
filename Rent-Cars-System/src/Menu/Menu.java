@@ -2,7 +2,10 @@ package Menu;
 
 import Models.*;
 import Services.*;
+
+import java.sql.*;
 import java.util.Scanner;
+import DB.DBConnection;
 
 public class Menu {
     private Scanner scanner;
@@ -110,67 +113,126 @@ public class Menu {
             System.out.println("Invalid Client ID!");
             return;
         }
+
         Car car = carService.getCarById(car_id);
         if (car == null) {
             System.out.println("Invalid Car ID!");
             return;
         }
+
         if (!car.getAvailable()) {
             System.out.println("This car is already rented!");
             return;
         }
 
-        System.out.print("Enter the start date: ");
+        System.out.print("Enter the start date (yyyy-mm-dd): ");
         String startDate = scanner.nextLine();
 
         System.out.print("How many days do you want to rent for?: ");
         int days = scanner.nextInt();
         scanner.nextLine();
 
-        Rental newRental = new Rental(client, car, startDate, days);
-        client.addRental(newRental);
-        car.setAvailable(false);
+        double totalPrice = car.calculateRentalPrice(days);
 
-        System.out.printf("Client with id: %d rented car with id: %d.\n", client_id, car_id);
+        String insertRental = "INSERT INTO rentals (client_id, car_id, start_date, days, total_price, active) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(insertRental)) {
+
+            stmt.setInt(1, client_id);
+            stmt.setInt(2, car_id);
+            stmt.setDate(3, Date.valueOf(startDate));
+            stmt.setInt(4, days);
+            stmt.setDouble(5, totalPrice);
+            stmt.setBoolean(6, true);
+            stmt.executeUpdate();
+
+            String updateCar = "UPDATE cars SET available = false WHERE id = ?";
+            try (PreparedStatement updateStmt = con.prepareStatement(updateCar)) {
+                updateStmt.setInt(1, car_id);
+                updateStmt.executeUpdate();
+            }
+
+            System.out.printf("Client %d rented car %d for %d days (%.2f RON).\n", client_id, car_id, days, totalPrice);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     public void viewActiveRentals() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter a client id: ");
+        System.out.print("Enter a client id: ");
         int client_id = scanner.nextInt();
-        scanner.nextLine();
 
-        Client client = clientService.getClientById(client_id);
-        if (client == null) {
-            System.out.println("Invalid Client ID!");
-            return;
-        }
+        String query = "SELECT * FROM rentals WHERE client_id = ? AND active = true";
 
-        if(client.getRentals().isEmpty()){
-            System.out.println("This client has no rentals.");
-            return;
-        }
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
 
-        for (Rental rental : client.getRentals()) {
-            System.out.println(rental);
+            stmt.setInt(1, client_id);
+            ResultSet rs = stmt.executeQuery();
+
+            boolean found = false;
+            while (rs.next()) {
+                int rentalId = rs.getInt("id");
+                int carId = rs.getInt("car_id");
+                String startDate = rs.getDate("start_date").toString();
+                int days = rs.getInt("days");
+                double price = rs.getDouble("total_price");
+
+                Car car = carService.getCarById(carId);
+                if (car != null) {
+                    System.out.printf("Rental #%d: %s %s, Start: %s, Days: %d, Total: %.2f RON\n",
+                            rentalId, car.getBrand(), car.getModel(), startDate, days, price);
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                System.out.println("This client has no active rentals.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
 
     public void viewAllActiveRentals() {
-        for (Client client : clientService.getClients()) {
-            System.out.printf("Rentals for client with ID: %d\n", client.getId());
+        String query = "SELECT * FROM rentals WHERE active = true ORDER BY client_id";
 
-            if(client.getRentals().isEmpty()){
-                System.out.println("This client has no rentals.");
+        try (Connection con = DBConnection.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            int lastClientId = -1;
+            while (rs.next()) {
+                int rentalId = rs.getInt("id");
+                int clientId = rs.getInt("client_id");
+                int carId = rs.getInt("car_id");
+                String startDate = rs.getDate("start_date").toString();
+                int days = rs.getInt("days");
+                double price = rs.getDouble("total_price");
+
+                if (clientId != lastClientId) {
+                    System.out.printf("\nRentals for client ID: %d\n", clientId);
+                    lastClientId = clientId;
+                }
+
+                Car car = carService.getCarById(carId);
+                if (car != null) {
+                    System.out.printf("Rental #%d: %s %s, Start: %s, Days: %d, Total: %.2f RON\n",
+                            rentalId, car.getBrand(), car.getModel(), startDate, days, price);
+                }
             }
 
-            for (Rental rental : client.getRentals()) {
-                System.out.println(rental);
-            }
-
-            System.out.println();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
 
     public void returnRentedCar() {
         Scanner scanner = new Scanner(System.in);
@@ -181,19 +243,29 @@ public class Menu {
         int car_id = scanner.nextInt();
         scanner.nextLine();
 
-        Client client = clientService.getClientById(client_id);
-        if (client == null) {
-            System.out.println("Invalid Client ID!");
-            return;
-        }
-        Car car = carService.getCarById(car_id);
-        if (car == null) {
-            System.out.println("Invalid Car ID!");
-            return;
-        }
+        String updateRental = "UPDATE rentals SET active = false WHERE client_id = ? AND car_id = ? AND active = true";
+        String updateCar = "UPDATE cars SET available = true WHERE id = ?";
 
-        client.removeRental(car_id);
-        car.setAvailable(true);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement rentalStmt = con.prepareStatement(updateRental);
+             PreparedStatement carStmt = con.prepareStatement(updateCar)) {
+
+            rentalStmt.setInt(1, client_id);
+            rentalStmt.setInt(2, car_id);
+            int rows = rentalStmt.executeUpdate();
+
+            if (rows > 0) {
+                carStmt.setInt(1, car_id);
+                carStmt.executeUpdate();
+                System.out.println("Car successfully returned and rental marked as inactive.");
+            } else {
+                System.out.println("No active rental found for this client and car.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 }
 
