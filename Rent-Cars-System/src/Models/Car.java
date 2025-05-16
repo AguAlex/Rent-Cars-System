@@ -21,6 +21,7 @@ public class Car implements  Rentable{
     public int getId() {
         return id;
     }
+
     public String getBrand() {
         return brand;
     }
