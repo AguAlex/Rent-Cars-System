@@ -35,6 +35,8 @@ public class ClientServices {
             stmt.executeUpdate();
 
             System.out.println("Client added successfully!");
+            AuditService.getInstance().logAction("Add new client");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

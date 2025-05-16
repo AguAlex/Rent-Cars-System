@@ -154,6 +154,7 @@ public class Menu {
             }
 
             System.out.printf("Client %d rented car %d for %d days (%.2f RON).\n", client_id, car_id, days, totalPrice);
+            AuditService.getInstance().logAction("Rent car");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -258,6 +259,8 @@ public class Menu {
                 carStmt.setInt(1, car_id);
                 carStmt.executeUpdate();
                 System.out.println("Car successfully returned and rental marked as inactive.");
+                AuditService.getInstance().logAction("Return car");
+
             } else {
                 System.out.println("No active rental found for this client and car.");
             }

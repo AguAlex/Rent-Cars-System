@@ -92,6 +92,8 @@ public class CarServices {
             stmt.executeUpdate();
 
             System.out.println("Car added successfully!");
+            AuditService.getInstance().logAction("Add new car");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
