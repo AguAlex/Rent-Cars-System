@@ -72,7 +72,7 @@ public class Menu {
                 break;
             case 8:
                 // De implementat in etapa 2
-                carService.showHistory();
+                //carService.showHistory();
                 break;
             case 9:
                 viewActiveRentals();

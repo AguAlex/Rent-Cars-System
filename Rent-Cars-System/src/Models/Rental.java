@@ -10,15 +10,24 @@ public class Rental {
     private boolean active;
     private static int id_cnt = 0;
 
+    public Rental(int id, Client client, Car car, String startDate, int days, double totalPrice, boolean active) {
+        this.id = id;
+        this.client = client;
+        this.car = car;
+        this.startDate = startDate;
+        this.days = days;
+        this.totalPrice = totalPrice;
+        this.active = active;
+    }
+
     public Rental(Client client, Car car, String startDate, int days) {
         this.id = ++id_cnt;
         this.client = client;
         this.car = car;
         this.startDate = startDate;
         this.days = days;
-        this.active = true;
         this.totalPrice = car.calculateRentalPrice(days);
-        car.setAvailable(false);
+        this.active = true;
     }
 
     public int getCarId() {
